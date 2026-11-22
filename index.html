@@ -832,6 +832,11 @@
         margin: 0;
         flex-shrink: 0;
       }
+      .note-card p.ivd-note-line {
+        color: var(--text);
+        font-size: 12px;
+        margin-top: 2px;
+      }
       .ivd-badge {
         display: inline-block;
         font-size: 11px;
@@ -1364,6 +1369,15 @@
         <button id="btnIvdPrefill" type="button" class="text-btn">Заполнить по осмотру</button>
       </div>
       <div id="ivdBox" class="ivd"></div>
+      <label
+        >Характеристика по ИВД<textarea
+          id="ivdNote"
+          rows="3"
+          maxlength="4000"
+          placeholder="Текстовая характеристика объекта по ИВД 2.0"
+        ></textarea>
+      </label>
+      <p id="ivdMeta" class="coords"></p>
       <input id="photoInput" type="file" accept="image/*" capture="environment" hidden />
       <input id="galleryInput" type="file" accept="image/*" multiple hidden />
       <input id="geoPhotoInput" type="file" accept="image/*" multiple hidden />
@@ -1775,6 +1789,7 @@
         draftLine = null,
         draftCat = "",
         draftIvd = {},
+        ivdTouched = false, // архитектор менял баллы или характеристику ИВД в этом окне
         streetMode = false;
       const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + Math.random());
       const fmtCoords = (lat, lng) => `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
@@ -2358,6 +2373,9 @@
         draftPhotos = [];
         draftCriteria = {};
         draftIvd = {};
+        ivdTouched = false;
+        $("ivdNote").value = "";
+        $("ivdMeta").textContent = "";
         draftLine = null;
         draftCat = "";
         els.title.value = "";
@@ -2609,6 +2627,18 @@
         renderIvd();
         toast(`Предварительно заполнено критериев: ${filled}. Проверьте и поставьте 2 там, где нарушение массовое`);
       });
+      const IVD_SOURCE_LABEL = { ai: "ИИ", architect: "Архитектор" };
+      function ivdMetaText(n) {
+        if (!n || (!n.ivdSource && !n.ivdUpdatedAt)) return "";
+        const who = IVD_SOURCE_LABEL[n.ivdSource] || n.ivdSource || "";
+        return ["Оценка ИВД", who, n.ivdUpdatedAt ? fmtDate(n.ivdUpdatedAt) : ""].filter(Boolean).join(" · ");
+      }
+      ivdBox.addEventListener("click", (e) => {
+        if (e.target.closest("button[data-c]")) ivdTouched = true;
+      });
+      ivdBox.addEventListener("change", () => (ivdTouched = true));
+      $("ivdNote").addEventListener("input", () => (ivdTouched = true));
+      $("btnIvdPrefill").addEventListener("click", () => (ivdTouched = true));
       function ivdBadge(n) {
         const r = ivdCalc(n.ivd);
         if (!r.any) return "";
@@ -2660,6 +2690,8 @@
           draftCriteria = { ...(note.criteria || {}) };
           draftCat = note.category || "";
           draftIvd = note.ivd ? { ...note.ivd } : {};
+          $("ivdNote").value = note.ivdNote || "";
+          $("ivdMeta").textContent = ivdMetaText(note);
           els.del.classList.remove("hidden");
         } else {
           els.modalTitle.textContent = draftLine ? "Заметка на улицу" : "Новая заметка";
@@ -2676,7 +2708,8 @@
         if (!requireUser()) return;
         const title = els.title.value.trim(),
           text = els.text.value.trim();
-        const hasAudit = Object.values(draftCriteria).some(Boolean) || ivdCalc(draftIvd).any;
+        const ivdNoteText = $("ivdNote").value.trim();
+        const hasAudit = Object.values(draftCriteria).some(Boolean) || ivdCalc(draftIvd).any || !!ivdNoteText;
         if (!title && !text && !draftPhotos.length && !hasAudit) {
           toast("Оцените пункты, напишите текст или добавьте фото");
           return;
@@ -2695,6 +2728,9 @@
           ivd: normalizeIvd(draftIvd),
           updatedAt: Date.now(),
         };
+        // характеристика ИВД (колонки ivd_note / ivd_source / ivd_updated_at) меняется только если её трогали
+        if (ivdTouched)
+          Object.assign(fields, { ivdNote: ivdNoteText, ivdSource: "architect", ivdUpdatedAt: Date.now() });
         let saved = null;
         if (editingId) {
           const i = notes.findIndex((n) => n.id === editingId);
@@ -2912,7 +2948,7 @@
         }).join(" ");
         const r = ivdCalc(n.ivd);
         const ivd = r.any ? `ивд ${fmt1(r.value)} ${r.level ? r.level.label : ""} ${r.flag ? "красный флаг" : ""}` : "";
-        return [n.title || "", n.text || "", n.lat, n.lng, crit, ivd].join(" ").toLowerCase();
+        return [n.title || "", n.text || "", n.lat, n.lng, crit, ivd, n.ivdNote || ""].join(" ").toLowerCase();
       }
       function renderList() {
         const q = (els.noteSearch.value || "").trim().toLowerCase();
@@ -2972,7 +3008,7 @@
                 return `<span class="${v === "bad" ? "bad" : ""}">${escapeHtml(a.label)}: ${escapeHtml(AUDIT_MARK[v] || v)}</span>`;
               })
               .join("");
-            return `<button class="note-card" data-id="${escapeHtml(n.id)}" type="button">${catBadge(n)}${ivdBadge(n)}<h3>${escapeHtml(n.title || "Без названия")}</h3><p>${escapeHtml(n.text || "")}</p>${tags ? `<div class="note-tags">${tags}</div>` : ""}${thumbs ? `<div class="note-thumbs">${thumbs}</div>` : ""}<time>${fmtDate(n.updatedAt)}</time></button>`;
+            return `<button class="note-card" data-id="${escapeHtml(n.id)}" type="button">${catBadge(n)}${ivdBadge(n)}<h3>${escapeHtml(n.title || "Без названия")}</h3><p>${escapeHtml(n.text || "")}</p>${n.ivdNote ? `<p class="ivd-note-line">ИВД: ${escapeHtml(n.ivdNote)}</p>` : ""}${tags ? `<div class="note-tags">${tags}</div>` : ""}${thumbs ? `<div class="note-thumbs">${thumbs}</div>` : ""}<time>${fmtDate(n.updatedAt)}</time></button>`;
           })
           .join("");
       }
@@ -3751,6 +3787,15 @@
           category: CAT_BY_ID[raw.category] ? raw.category : "",
           // ИВД хранится в заметке как ivd, а в базе — внутри criteria.ivd (схема таблицы не меняется)
           ivd: normalizeIvd(raw.ivd || (raw.criteria && raw.criteria.ivd)),
+          // характеристика ИВД: в базе — колонки ivd_note / ivd_source / ivd_updated_at.
+          // Ключи появляются только если запись их содержала: так приложение не затирает чужой текст пустым.
+          ...(raw.ivdNote !== undefined || "ivd_note" in raw
+            ? {
+                ivdNote: String(raw.ivdNote ?? raw.ivd_note ?? "").slice(0, 4000),
+                ivdSource: String(raw.ivdSource ?? raw.ivd_source ?? ""),
+                ivdUpdatedAt: Number(raw.ivdUpdatedAt) || Date.parse(raw.ivd_updated_at || "") || null,
+              }
+            : {}),
           createdAt: Number(raw.createdAt) || Date.now(),
           updatedAt: Number(raw.updatedAt) || Date.now(),
         };
@@ -4025,12 +4070,24 @@
           created_at: new Date(note.createdAt || Date.now()).toISOString(),
           updated_at: new Date(note.updatedAt || Date.now()).toISOString(),
         };
+        // Характеристику ИВД отправляем, только если заметка её знает (получена из базы или правилась здесь).
+        // Колонки, которых нет в запросе, Supabase при сохранении не трогает — текст ИИ не затрётся.
+        if (note.ivdNote !== undefined) {
+          row.ivd_note = note.ivdNote || null;
+          row.ivd_source = note.ivdSource || null;
+          row.ivd_updated_at = note.ivdUpdatedAt ? new Date(note.ivdUpdatedAt).toISOString() : null;
+        }
         const dbUrl = `${dbBase(cfg)}/rest/v1/notes?on_conflict=id`;
-        let res = await dbFetch(dbUrl, { method: "POST", headers: dbHeaders(cfg), body: JSON.stringify(row) });
-        if (!res.ok && row.category) {
-          // в старых базах может не быть колонки category
-          const { category, ...rest } = row;
-          res = await dbFetch(dbUrl, { method: "POST", headers: dbHeaders(cfg), body: JSON.stringify(rest) });
+        // базы без новых колонок или без category отвечают 400 — повторяем с меньшим набором полей
+        const withoutIvd = ({ ivd_note, ivd_source, ivd_updated_at, ...r }) => r;
+        const withoutCat = ({ category, ...r }) => r;
+        const variants = [row];
+        if ("ivd_note" in row) variants.push(withoutIvd(row));
+        variants.push(withoutCat(withoutIvd(row)));
+        let res;
+        for (const body of variants) {
+          res = await dbFetch(dbUrl, { method: "POST", headers: dbHeaders(cfg), body: JSON.stringify(body) });
+          if (res.ok || res.status !== 400) break;
         }
         if (!res.ok) throw new Error("db " + res.status);
       }
@@ -4049,7 +4106,19 @@
         const root = `${dbBase(cfg)}/rest/v1/notes`,
           bar = els.syncBar;
         const LIGHT = "id,author,role,title,text,lat,lng,category,criteria,line,created_at,updated_at";
-        const since = opts.since ? `&updated_at=gt.${encodeURIComponent(opts.since)}` : "";
+        // наборы колонок: с полями ИВД → без них (база без новых колонок) → без category (совсем старые базы)
+        const COLSETS = [LIGHT + ",ivd_note,ivd_source,ivd_updated_at", LIGHT, LIGHT.replace("category,", "")];
+        const nextCols = (c) =>
+          c === "id,updated_at,ivd_updated_at"
+            ? "id,updated_at"
+            : COLSETS.indexOf(c) >= 0 && COLSETS.indexOf(c) < COLSETS.length - 1
+              ? COLSETS[COLSETS.indexOf(c) + 1]
+              : null;
+        // изменением считается и новая оценка ИВД (ivd_updated_at), даже если updated_at не менялся
+        const sinceVal = opts.since ? encodeURIComponent(opts.since) : "";
+        let since = sinceVal ? `&or=(updated_at.gt.${sinceVal},ivd_updated_at.gt.${sinceVal})` : "";
+        const rowTs = (r) => Math.max(Date.parse(r.updated_at) || 0, Date.parse(r.ivd_updated_at || "") || 0);
+        const locTs = (n) => Math.max(n.updatedAt || 0, n.ivdUpdatedAt || 0);
         const prog = (pct, txt) => {
           if (opts.silent || !alive()) return;
           bar.classList.remove("hidden");
@@ -4059,7 +4128,7 @@
         const idList = (ids) => encodeURIComponent(ids.map((x) => `"${String(x).replace(/"/g, "")}"`).join(","));
         try {
           // ЭТАП 1: только лёгкие поля (без фото), крупными страницами
-          let cols = opts.silent ? "id,updated_at" : LIGHT,
+          let cols = opts.silent ? "id,updated_at,ivd_updated_at" : COLSETS[0],
             page = opts.silent ? 500 : 100,
             off = 0,
             total = 0;
@@ -4082,8 +4151,9 @@
               throw e;
             }
             if (!alive()) return;
-            if (res.status === 400 && cols === LIGHT) {
-              cols = LIGHT.replace("category,", "");
+            if (res.status === 400 && nextCols(cols)) {
+              cols = nextCols(cols);
+              if (sinceVal) since = `&updated_at=gt.${sinceVal}`;
               continue;
             }
             if (!res.ok) {
@@ -4106,24 +4176,27 @@
             if (part.length < page) break;
             await tick();
           }
-          const mx = rows.reduce((m, r) => (r.updated_at && r.updated_at > m ? r.updated_at : m), "");
+          const mx = rows.reduce(
+            (m, r) => [r.updated_at, r.ivd_updated_at].reduce((a, t) => (t && t > a ? t : a), m),
+            "",
+          );
           if (opts.silent) {
             // фоновая сверка: сравниваем id и updated_at с локальными, затем докачиваем только новые/изменённые
             const ids = rows
               .filter((r) => {
                 const ex = findNote(r.id);
-                return !ex || ex.updatedAt < (Date.parse(r.updated_at) || 0);
+                return !ex || locTs(ex) < rowTs(r);
               })
               .map((r) => r.id);
             rows.length = 0;
             if (!ids.length) return;
-            let dc = LIGHT;
+            let dc = COLSETS[0];
             for (let k = 0; k < ids.length; k += 20) {
               if (!alive()) return;
               const q = idList(ids.slice(k, k + 20));
               let res = await dbFetch(`${root}?select=${dc}&id=in.(${q})`, { headers: dbHeaders(cfg) }, 2);
-              if (res.status === 400 && dc === LIGHT) {
-                dc = LIGHT.replace("category,", "");
+              while (res.status === 400 && nextCols(dc)) {
+                dc = nextCols(dc);
                 res = await dbFetch(`${root}?select=${dc}&id=in.(${q})`, { headers: dbHeaders(cfg) }, 2);
               }
               if (!res.ok) return;
@@ -4137,7 +4210,7 @@
           for (const r of rows) {
             const ts = Date.parse(r.updated_at) || 0,
               ex = findNote(r.id);
-            if (ex && (opts.silent ? ex.updatedAt >= ts : ex.updatedAt > ts)) continue; // ручная загрузка пересобирает всё, кроме несинхронизированных локальных правок
+            if (ex && (opts.silent ? locTs(ex) >= rowTs(r) : locTs(ex) > rowTs(r))) continue; // ручная загрузка пересобирает всё, кроме несинхронизированных локальных правок
             const n = normalizeNote({
               id: r.id,
               title: r.title,
@@ -4150,6 +4223,11 @@
               line: r.line,
               createdAt: Date.parse(r.created_at) || Date.now(),
               updatedAt: ts || Date.now(),
+              ...("ivd_note" in r
+                ? { ivd_note: r.ivd_note, ivd_source: r.ivd_source, ivd_updated_at: r.ivd_updated_at }
+                : ex && ex.ivdNote !== undefined
+                  ? { ivdNote: ex.ivdNote, ivdSource: ex.ivdSource, ivdUpdatedAt: ex.ivdUpdatedAt }
+                  : {}),
             });
             if (n) {
               upsert.push(n);
@@ -4470,6 +4548,9 @@
         out.ivd_kz = r.k;
         out.ivd_ip = r.ip;
         out.ivd_prelim = v.prelim ? 1 : 0;
+        out.ivd_note = n.ivdNote || "";
+        out.ivd_source = n.ivdSource || "";
+        out.ivd_updated_at = n.ivdUpdatedAt ? new Date(n.ivdUpdatedAt).toISOString() : "";
         return out;
       }
       async function doExport(ext, text, mime, desc) {
@@ -4556,6 +4637,9 @@
           ["ivd_kz", "esriFieldTypeDouble"],
           ["ivd_ip", "esriFieldTypeDouble"],
           ["ivd_prelim", "esriFieldTypeSmallInteger"],
+          ["ivd_note", "esriFieldTypeString"],
+          ["ivd_source", "esriFieldTypeString"],
+          ["ivd_updated_at", "esriFieldTypeString"],
           ["createdAt", "esriFieldTypeDouble"],
           ["updatedAt", "esriFieldTypeDouble"],
         ].map(([name, type]) => ({ name, type, alias: name }));
@@ -4610,6 +4694,9 @@
             "Кз",
             "ИП",
             "Предварительно",
+            "Характеристика ИВД",
+            "Кто оценил ИВД",
+            "Оценка ИВД обновлена",
           ],
           ...rows.map(({ u, n }, k) => [
             k + 1,
@@ -4634,6 +4721,9 @@
                 r.k != null ? r.k : "",
                 r.ip != null ? r.ip : "",
                 n.ivd && n.ivd.prelim ? "да" : "",
+                n.ivdNote || "",
+                IVD_SOURCE_LABEL[n.ivdSource] || n.ivdSource || "",
+                n.ivdUpdatedAt ? dt(n.ivdUpdatedAt) : "",
               ];
             })(),
           ]),
