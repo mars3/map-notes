@@ -697,6 +697,188 @@
         background: var(--border);
         color: var(--text);
       }
+      /* ===== ИВД 2.0 ===== */
+      .ivd-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .ivd-head .coords {
+        margin: 0;
+      }
+      .ivd {
+        margin: 6px 0 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .ivd-summary {
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 13px;
+        line-height: 1.45;
+        border: 1px solid var(--border);
+        background: var(--soft);
+        color: var(--text);
+      }
+      .ivd-summary b {
+        font-size: 18px;
+        font-weight: 700;
+        margin-right: 6px;
+      }
+      .ivd-summary .ivd-sub {
+        display: block;
+        font-size: 12px;
+        opacity: 0.85;
+        margin-top: 2px;
+      }
+      .ivd-group {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 6px 0 0;
+      }
+      .ivd-row {
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+      .ivd-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+      }
+      .ivd-code {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: var(--solid);
+        border: 1px solid var(--border);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .ivd-hint {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+        min-height: 16px;
+      }
+      .pills button.on-0 {
+        background: var(--ok-soft);
+        border-color: var(--ok);
+        color: var(--ok);
+        font-weight: 600;
+      }
+      .pills button.on-1 {
+        background: #fdf0dc;
+        border-color: #c77d1e;
+        color: #8a5208;
+        font-weight: 600;
+      }
+      .pills button.on-2 {
+        background: var(--danger-soft);
+        border-color: var(--danger);
+        color: var(--danger);
+        font-weight: 600;
+      }
+      .pills button.on-x {
+        background: var(--border);
+        color: var(--text);
+        font-weight: 600;
+      }
+      .ivd-extra {
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 13px;
+      }
+      .ivd-extra select {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        font: inherit;
+        font-size: 16px;
+        color: var(--text);
+        background: var(--solid);
+      }
+      .ivd-check {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        margin: 0;
+      }
+      .ivd-check input {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        flex-shrink: 0;
+      }
+      .ivd-badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin: 0 0 6px 4px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+      }
+      .style-switch .ivd-toggle {
+        border-left: 1px solid var(--border);
+        border-radius: 0 999px 999px 0;
+        margin-left: 2px;
+      }
+      .ivd-legend {
+        position: fixed;
+        left: 12px;
+        bottom: calc(68px + var(--safe-b));
+        z-index: 900;
+        background: var(--surface);
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 10px 12px;
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .ivd-legend b {
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
+      .ivd-legend span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ivd-legend i {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        flex-shrink: 0;
+      }
       .note-tags {
         display: flex;
         flex-wrap: wrap;
@@ -1079,7 +1261,11 @@
       <button type="button" data-style="liberty" class="on" aria-pressed="true">Улицы</button>
       <button type="button" data-style="bright" aria-pressed="false">Яркая</button>
       <button type="button" data-style="positron" aria-pressed="false">Светлая</button>
+      <button type="button" id="btnIvdMode" class="ivd-toggle" aria-pressed="false" title="Раскрасить карту по ИВД">
+        ИВД
+      </button>
     </div>
+    <div id="ivdLegend" class="ivd-legend hidden" aria-label="Легенда ИВД"></div>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
     <div id="overlay" class="overlay hidden"></div>
     <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Просмотр фото" tabindex="-1">
@@ -1173,6 +1359,11 @@
       </label>
       <div class="coords">Осмотр улицы — один тап по пункту</div>
       <div id="auditList" class="audit"></div>
+      <div class="ivd-head">
+        <div class="coords">Индекс визуального дисбаланса (ИВД 2.0)</div>
+        <button id="btnIvdPrefill" type="button" class="text-btn">Заполнить по осмотру</button>
+      </div>
+      <div id="ivdBox" class="ivd"></div>
       <input id="photoInput" type="file" accept="image/*" capture="environment" hidden />
       <input id="galleryInput" type="file" accept="image/*" multiple hidden />
       <input id="geoPhotoInput" type="file" accept="image/*" multiple hidden />
@@ -1323,6 +1514,191 @@
         { id: "ads", label: "Реклама и навигация" },
       ];
       const AUDIT_MARK = { ok: "Норма", bad: "Замечание", na: "Нет / н/п" };
+
+      // ===== ИВД 2.0 — индекс визуального дисбаланса (методика «ИВД 2.0») =====
+      // 10 критериев, балл 0 / 1 / 2 или «—» (не видно на фото, в расчёт не входит).
+      const IVD = [
+        {
+          id: "r",
+          code: "Р",
+          group: "Ш",
+          label: "Вывески и реклама",
+          hints: [
+            "Вывески в одной линии, одна на заведение",
+            "Разнобой размеров и цветов, отдельные наклейки или баннер",
+            "Вывески закрывают окна и детали фасада, растяжки, экраны, реклама в несколько ярусов",
+          ],
+        },
+        {
+          id: "f",
+          code: "Ф",
+          group: "Ш",
+          label: "Фасад и ограждение",
+          hints: [
+            "Единая отделка, ничего лишнего; ограждения нет или оно прозрачное",
+            "Отдельные кондиционеры, самовольное остекление, рольставни; часть фронта — глухое или разнотипное ограждение",
+            "Массово на всём фасаде, пристройки, разные цвета по секциям; глухой забор на большей части фронта, профлист",
+          ],
+        },
+        {
+          id: "i",
+          code: "И",
+          group: "Ш",
+          label: "Инженерные элементы на виду",
+          hints: [
+            "Не видны или скрыты",
+            "Отдельные провода, труба или шкаф",
+            "Пучки проводов поперёк улицы, газовая труба по всему фасаду, несколько шкафов",
+          ],
+        },
+        {
+          id: "n",
+          code: "Н",
+          group: "Ш",
+          label: "НТО и временные конструкции",
+          hints: [
+            "Нет или типовые, стоят упорядоченно",
+            "Единичный нетиповой киоск или навес",
+            "Стихийная торговля, скопление киосков, занят тротуар",
+          ],
+        },
+        {
+          id: "t",
+          code: "Т",
+          group: "С",
+          label: "Техсостояние и чистота",
+          hints: [
+            "Хорошее",
+            "Удовлетворительное: износ, отслоение отделки, мусор локально",
+            "Плохое или аварийное, заброшено, незавершёнка, свалка",
+          ],
+        },
+        {
+          id: "b",
+          code: "Б",
+          group: "С",
+          label: "Покрытия и парковка",
+          hints: [
+            "Целые, тротуар есть",
+            "Локальные трещины, выбоины, разнотипные покрытия",
+            "Нет тротуара, покрытие разрушено, машины на тротуаре",
+          ],
+        },
+        {
+          id: "z",
+          code: "З",
+          group: "С",
+          label: "Озеленение и тень",
+          hints: [
+            "Деревья или навесы дают тень, зелень ухожена",
+            "Тень частично, зелень неухожена",
+            "Нет ни тени, ни зелени на пешеходном участке, сорняки, голый грунт",
+          ],
+        },
+        {
+          id: "e",
+          code: "Э",
+          group: "С",
+          label: "Оборудование улицы: свет, МАФ, навигация",
+          hints: ["Есть, целые, единого типа", "Частично, разнотипные", "Нет или сломаны"],
+        },
+        {
+          id: "m",
+          code: "М",
+          group: "К",
+          label: "Масштаб и высота",
+          hints: [
+            "В масштабе соседней застройки",
+            "Выбивается на 1–2 этажа или по длине фасада",
+            "Резко выбивается или закрывает вид на мавзолей и другие доминанты",
+          ],
+        },
+        {
+          id: "c",
+          code: "Ц",
+          group: "К",
+          label: "Стиль и цвет",
+          hints: [
+            "Созвучен окружению и палитре города",
+            "Диссонанс по одному признаку (цвет, материал или стиль)",
+            "Кричащий цвет, зеркальное остекление, псевдоисторическая эклектика",
+          ],
+        },
+      ];
+      const IVD_GROUPS = [
+        { id: "Ш", label: "Ш — визуальный шум" },
+        { id: "С", label: "С — состояние и комфорт среды" },
+        { id: "К", label: "К — композиция и облик" },
+      ];
+      // уровни и цвета карты по методике (раздел 3)
+      const IVD_LEVELS = [
+        { id: "norm", label: "Норма", min: 0, color: "#F3EEE4", ink: "#3b3326", stroke: "#8a7f6a" },
+        { id: "mod", label: "Умеренный", min: 1.5, color: "#E2A05A", ink: "#3b2408", stroke: "#fff" },
+        { id: "high", label: "Высокий", min: 3, color: "#B9532E", ink: "#fff", stroke: "#fff" },
+        { id: "crit", label: "Критический", min: 5, color: "#6E1E17", ink: "#fff", stroke: "#fff" },
+      ];
+      const IVD_NONE = {
+        id: "none",
+        label: "Не оценено или меньше 6 критериев",
+        color: "#9aa1ab",
+        ink: "#fff",
+        stroke: "#fff",
+      };
+      const IVD_LEVEL_BY_ID = Object.fromEntries([...IVD_LEVELS, IVD_NONE].map((l) => [l.id, l]));
+      // средовые зоны и коэффициент Кз (раздел 4; значения — предложение исполнителя)
+      const IVD_ZONES = [
+        { id: "А", label: "А — историческое ядро и охранные зоны", k: 1.5 },
+        { id: "Б", label: "Б — центральные улицы и туристические маршруты", k: 1.3 },
+        { id: "В", label: "В — АДЦ и новые общественные центры", k: 1.2 },
+        { id: "Г", label: "Г — жилые районы", k: 1.0 },
+        { id: "Д", label: "Д — въезды и магистрали", k: 1.1 },
+        { id: "Е", label: "Е — рекреация (Карашык, парки, аллея Гаухар-ана — Ясави)", k: 1.2 },
+      ];
+      const IVD_MIN_N = 6;
+      // предварительная оценка по «Осмотру улицы» (раздел 8.3): замечание = 1, норма = 0, М и Ц = «—»
+      const IVD_FROM_AUDIT = {
+        r: ["ads"],
+        f: ["facade", "fence"],
+        b: ["sidewalk", "drainage"],
+        e: ["lighting", "furniture"],
+      };
+      const isScore = (x) => x === 0 || x === 1 || x === 2;
+      const round1 = (x) => Math.round(x * 10) / 10;
+      const fmt1 = (x) => (x == null ? "—" : round1(x).toFixed(1).replace(".", ","));
+      // Расчёт по методике: ИВД = 10 × сумма / (2 × n), n — оценённые критерии; при n < 6 ИВД не считается.
+      function ivdCalc(v) {
+        v = v || {};
+        const scores = IVD.map((c) => v[c.id]).filter(isScore);
+        const n = scores.length,
+          sum = scores.reduce((a, b) => a + b, 0);
+        const value = n >= IVD_MIN_N ? (10 * sum) / (2 * n) : null;
+        // красный флаг: М = 2 или Ц = 2 в зоне А или в видовом коридоре; Т = 2 с угрозой безопасности
+        const flag = ((v.zone === "А" || !!v.corridor) && (v.m === 2 || v.c === 2)) || (v.t === 2 && !!v.safety);
+        let level = value == null ? null : [...IVD_LEVELS].reverse().find((l) => value >= l.min);
+        if (flag) level = IVD_LEVEL_BY_ID.crit;
+        const zone = IVD_ZONES.find((z) => z.id === v.zone);
+        const k = v.corridor ? 1.5 : zone ? zone.k : null;
+        const ip = value != null && k != null ? round1(round1(value) * k) : null;
+        return { n, sum, value, level, flag, k, ip, any: n > 0 || flag || !!v.zone || !!v.corridor };
+      }
+      function normalizeIvd(raw) {
+        if (!raw || typeof raw !== "object") return null;
+        const o = {};
+        let any = false;
+        // сохраняем только явно выставленные критерии: балл 0–2 или null («—»); неоценённых ключей нет
+        for (const c of IVD) {
+          if (!Object.prototype.hasOwnProperty.call(raw, c.id)) continue;
+          const x = raw[c.id] === "" || raw[c.id] == null ? null : Number(raw[c.id]);
+          o[c.id] = isScore(x) ? x : null;
+          if (isScore(x)) any = true;
+        }
+        o.zone = IVD_ZONES.some((z) => z.id === raw.zone) ? raw.zone : "";
+        o.corridor = !!raw.corridor;
+        o.safety = !!raw.safety;
+        o.prelim = !!raw.prelim;
+        if (o.zone || o.corridor) any = true;
+        return any ? o : null;
+      }
       const CATS = [
         { id: "landscape", label: "Благоустройство", color: "#0d9488", icon: "⛲" },
         { id: "maf", label: "МАФ", color: "#ea580c", icon: "🪑" },
@@ -1398,6 +1774,7 @@
         draftCriteria = {},
         draftLine = null,
         draftCat = "",
+        draftIvd = {},
         streetMode = false;
       const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + Math.random());
       const fmtCoords = (lat, lng) => `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
@@ -1980,6 +2357,7 @@
         pendingPos = null;
         draftPhotos = [];
         draftCriteria = {};
+        draftIvd = {};
         draftLine = null;
         draftCat = "";
         els.title.value = "";
@@ -2126,6 +2504,120 @@
           b.setAttribute("aria-pressed", String(on));
         });
       });
+      // ===== ИВД в окне заметки =====
+      const ivdBox = $("ivdBox");
+      function ivdSummaryHtml() {
+        const r = ivdCalc(draftIvd);
+        const lvl = r.level || IVD_NONE;
+        const head =
+          r.value != null
+            ? `<b>ИВД ${fmt1(r.value)}</b>${escapeHtml(r.level.label)}`
+            : r.flag
+              ? `<b>Критический</b>красный флаг`
+              : `<b>ИВД —</b>${r.n ? `оценено ${r.n} из 10, нужно не меньше ${IVD_MIN_N} — нужен досъём` : "не оценён"}`;
+        const sub = [
+          `оценено ${r.n} из 10, сумма ${r.sum}`,
+          r.ip != null ? `ИП ${fmt1(r.ip)} (Кз ${String(r.k).replace(".", ",")})` : "",
+          r.flag ? "⚑ красный флаг" : "",
+          draftIvd.prelim ? "предварительная оценка" : "",
+        ]
+          .filter(Boolean)
+          .join(" · ");
+        return `<div class="ivd-summary" style="background:${lvl.color};color:${lvl.ink}">${head}<span class="ivd-sub">${escapeHtml(sub)}</span></div>`;
+      }
+      function ivdHint(c) {
+        const v = draftIvd[c.id];
+        return isScore(v)
+          ? `${v} — ${c.hints[v]}`
+          : v === null
+            ? "— не видно на фото, в расчёт не входит"
+            : "Не оценено";
+      }
+      function renderIvd() {
+        const rows = IVD_GROUPS.map(
+          (g) =>
+            `<div class="ivd-group">${escapeHtml(g.label)}</div>` +
+            IVD.filter((c) => c.group === g.id)
+              .map((c) => {
+                const v = draftIvd[c.id];
+                const btn = (val, text) => {
+                  const on = val === "x" ? v === null : v === Number(val);
+                  return `<button type="button" data-c="${c.id}" data-v="${val}" class="${on ? "on-" + val : ""}" aria-pressed="${on}">${text}</button>`;
+                };
+                return `<div class="ivd-row" role="group" aria-label="${escapeHtml(c.code + " " + c.label)}"><div class="ivd-title"><span class="ivd-code">${c.code}</span>${escapeHtml(c.label)}</div><div class="pills">${btn("0", "0")}${btn("1", "1")}${btn("2", "2")}${btn("x", "—")}</div><div class="ivd-hint" data-hint="${c.id}">${escapeHtml(ivdHint(c))}</div></div>`;
+              })
+              .join(""),
+        ).join("");
+        const zoneOpts = [`<option value="">Не указана</option>`]
+          .concat(
+            IVD_ZONES.map(
+              (z) =>
+                `<option value="${z.id}"${draftIvd.zone === z.id ? " selected" : ""}>${escapeHtml(z.label)} · Кз ${String(z.k).replace(".", ",")}</option>`,
+            ),
+          )
+          .join("");
+        ivdBox.innerHTML = `<div id="ivdSummary">${ivdSummaryHtml()}</div>${rows}<div class="ivd-extra"><label style="margin:0">Средовая зона (для Кз и красного флага)<select id="ivdZone">${zoneOpts}</select></label><label class="ivd-check"><input type="checkbox" id="ivdCorridor"${draftIvd.corridor ? " checked" : ""} />Видовой коридор на мавзолей (Кз = 1,5)</label><label class="ivd-check"><input type="checkbox" id="ivdSafety"${draftIvd.safety ? " checked" : ""} />Угроза безопасности при Т = 2 (аварийное состояние, открытый котлован)</label></div>`;
+      }
+      function updateIvdSummary() {
+        const box = $("ivdSummary");
+        if (box) box.innerHTML = ivdSummaryHtml();
+      }
+      ivdBox.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-c]");
+        if (!btn) return;
+        const id = btn.dataset.c,
+          val = btn.dataset.v === "x" ? null : Number(btn.dataset.v);
+        // повторный тап снимает оценку
+        if (draftIvd[id] === val) delete draftIvd[id];
+        else draftIvd[id] = val;
+        draftIvd.prelim = false;
+        const v = draftIvd[id];
+        btn.parentElement.querySelectorAll("button").forEach((b) => {
+          const on = id in draftIvd && (b.dataset.v === "x" ? v === null : v === Number(b.dataset.v));
+          b.className = on ? "on-" + b.dataset.v : "";
+          b.setAttribute("aria-pressed", String(on));
+        });
+        const hint = ivdBox.querySelector(`[data-hint="${id}"]`);
+        if (hint) hint.textContent = ivdHint(IVD.find((c) => c.id === id));
+        updateIvdSummary();
+      });
+      ivdBox.addEventListener("change", (e) => {
+        if (e.target.id === "ivdZone") draftIvd.zone = e.target.value;
+        else if (e.target.id === "ivdCorridor") draftIvd.corridor = e.target.checked;
+        else if (e.target.id === "ivdSafety") draftIvd.safety = e.target.checked;
+        else return;
+        updateIvdSummary();
+      });
+      // Предварительная оценка по «Осмотру улицы»: заполняет только пустые критерии.
+      $("btnIvdPrefill").addEventListener("click", () => {
+        let filled = 0;
+        for (const [cid, sources] of Object.entries(IVD_FROM_AUDIT)) {
+          if (cid in draftIvd) continue;
+          const vals = sources.map((a) => draftCriteria[a]).filter(Boolean);
+          if (vals.includes("bad")) draftIvd[cid] = 1;
+          else if (vals.includes("ok")) draftIvd[cid] = 0;
+          else continue;
+          filled++;
+        }
+        for (const cid of ["m", "c"]) if (!(cid in draftIvd)) draftIvd[cid] = null;
+        if (!filled) {
+          toast("Нечего переносить: отметьте пункты «Осмотра улицы» или оцените ИВД вручную");
+          renderIvd();
+          return;
+        }
+        draftIvd.prelim = true;
+        renderIvd();
+        toast(`Предварительно заполнено критериев: ${filled}. Проверьте и поставьте 2 там, где нарушение массовое`);
+      });
+      function ivdBadge(n) {
+        const r = ivdCalc(n.ivd);
+        if (!r.any) return "";
+        const lvl = r.level || IVD_NONE;
+        const text = r.level
+          ? `ИВД ${r.value != null ? fmt1(r.value) + " · " : ""}${r.level.label}${r.flag ? " ⚑" : ""}`
+          : `ИВД: оценено ${r.n} из 10`;
+        return `<span class="ivd-badge" style="background:${lvl.color};color:${lvl.ink}">${escapeHtml(text)}</span>`;
+      }
       function renderCats() {
         els.catList.innerHTML = CATS.map(
           (c) =>
@@ -2167,6 +2659,7 @@
           draftPhotos = Array.isArray(note.photos) ? note.photos.slice() : [];
           draftCriteria = { ...(note.criteria || {}) };
           draftCat = note.category || "";
+          draftIvd = note.ivd ? { ...note.ivd } : {};
           els.del.classList.remove("hidden");
         } else {
           els.modalTitle.textContent = draftLine ? "Заметка на улицу" : "Новая заметка";
@@ -2176,13 +2669,14 @@
         renderPhotos();
         renderCats();
         renderAudit();
+        renderIvd();
         openSheet(els.modal, els.title);
       }
       function persist() {
         if (!requireUser()) return;
         const title = els.title.value.trim(),
           text = els.text.value.trim();
-        const hasAudit = Object.values(draftCriteria).some(Boolean);
+        const hasAudit = Object.values(draftCriteria).some(Boolean) || ivdCalc(draftIvd).any;
         if (!title && !text && !draftPhotos.length && !hasAudit) {
           toast("Оцените пункты, напишите текст или добавьте фото");
           return;
@@ -2198,6 +2692,7 @@
           category: draftCat,
           photos: draftPhotos.slice(),
           criteria: { ...draftCriteria },
+          ivd: normalizeIvd(draftIvd),
           updatedAt: Date.now(),
         };
         let saved = null;
@@ -2415,7 +2910,9 @@
           const v = (n.criteria || {})[a.id];
           return v ? a.label + " " + (AUDIT_MARK[v] || v) : "";
         }).join(" ");
-        return [n.title || "", n.text || "", n.lat, n.lng, crit].join(" ").toLowerCase();
+        const r = ivdCalc(n.ivd);
+        const ivd = r.any ? `ивд ${fmt1(r.value)} ${r.level ? r.level.label : ""} ${r.flag ? "красный флаг" : ""}` : "";
+        return [n.title || "", n.text || "", n.lat, n.lng, crit, ivd].join(" ").toLowerCase();
       }
       function renderList() {
         const q = (els.noteSearch.value || "").trim().toLowerCase();
@@ -2475,7 +2972,7 @@
                 return `<span class="${v === "bad" ? "bad" : ""}">${escapeHtml(a.label)}: ${escapeHtml(AUDIT_MARK[v] || v)}</span>`;
               })
               .join("");
-            return `<button class="note-card" data-id="${escapeHtml(n.id)}" type="button">${catBadge(n)}<h3>${escapeHtml(n.title || "Без названия")}</h3><p>${escapeHtml(n.text || "")}</p>${tags ? `<div class="note-tags">${tags}</div>` : ""}${thumbs ? `<div class="note-thumbs">${thumbs}</div>` : ""}<time>${fmtDate(n.updatedAt)}</time></button>`;
+            return `<button class="note-card" data-id="${escapeHtml(n.id)}" type="button">${catBadge(n)}${ivdBadge(n)}<h3>${escapeHtml(n.title || "Без названия")}</h3><p>${escapeHtml(n.text || "")}</p>${tags ? `<div class="note-tags">${tags}</div>` : ""}${thumbs ? `<div class="note-thumbs">${thumbs}</div>` : ""}<time>${fmtDate(n.updatedAt)}</time></button>`;
           })
           .join("");
       }
@@ -2505,11 +3002,17 @@
 
       // ===== Карта =====
       const NOTE_LAYERS = ["note-points", "note-clusters", "note-lines"];
+      let ivdMode = false;
+      try {
+        ivdMode = localStorage.getItem("mn-ivd-mode") === "1";
+      } catch (e) {}
+      const ivdLevelId = (n) => (ivdCalc(n.ivd).level || IVD_NONE).id;
       function pinIconId(n) {
-        return `pin-${CAT_BY_ID[n.category] ? n.category : "none"}-${hasIssue(n) ? 1 : 0}`;
+        const cat = CAT_BY_ID[n.category] ? n.category : "none";
+        return ivdMode ? `pin-ivd-${ivdLevelId(n)}-${cat}` : `pin-${cat}-${hasIssue(n) ? 1 : 0}`;
       }
       // Рисует иконку-булавку (как раньше в HTML) на canvas для слоя карты.
-      function makePinImage(color, icon, bad) {
+      function makePinImage(color, icon, bad, stroke) {
         const pr = 2,
           W = 34,
           H = 42,
@@ -2536,7 +3039,7 @@
         ctx.fill();
         ctx.shadowColor = "transparent";
         ctx.lineWidth = 3;
-        ctx.strokeStyle = bad ? BAD_COLOR : "#fff";
+        ctx.strokeStyle = stroke || (bad ? BAD_COLOR : "#fff");
         path();
         ctx.stroke();
         ctx.font = '15px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
@@ -2573,6 +3076,13 @@
             const name = `pin-${id}-${bad}`;
             if (!map.hasImage(name)) map.addImage(name, makePinImage(color, icon, bad), { pixelRatio: 2 });
           }
+        // булавки режима ИВД: цвет уровня, значок группы объекта
+        for (const lvl of [...IVD_LEVELS, IVD_NONE])
+          for (const [id, , icon] of variants) {
+            const name = `pin-ivd-${lvl.id}-${id}`;
+            if (!map.hasImage(name))
+              map.addImage(name, makePinImage(lvl.color, icon, 0, lvl.stroke), { pixelRatio: 2 });
+          }
       }
       function noteFeatures() {
         return loadNotes()
@@ -2588,7 +3098,10 @@
           .filter((n) => n.line && Array.isArray(n.line.coordinates) && n.line.coordinates.length > 1)
           .map((n) => ({
             type: "Feature",
-            properties: { id: n.id, bad: hasIssue(n) ? "1" : "0" },
+            properties: {
+              id: n.id,
+              color: ivdMode ? IVD_LEVEL_BY_ID[ivdLevelId(n)].color : hasIssue(n) ? BAD_COLOR : DEFAULT_PIN,
+            },
             geometry: { type: "LineString", coordinates: n.line.coordinates },
           }));
       }
@@ -2612,7 +3125,7 @@
           id: "note-lines",
           type: "line",
           source: "note-lines",
-          paint: { "line-color": ["case", ["==", ["get", "bad"], "1"], BAD_COLOR, DEFAULT_PIN], "line-width": 4 },
+          paint: { "line-color": ["get", "color"], "line-width": 4 },
         },
         {
           // значок кластера с числом рисуется на canvas (makeClusterImage), поэтому шрифты карты не нужны
@@ -2674,7 +3187,7 @@
           .slice(0, 3)
           .map((ref) => thumbImg(ref, 'class="popup-img" alt=""'))
           .join("");
-        return `<strong>${escapeHtml(note.title || "Заметка")}</strong><br>${escapeHtml(note.text || "")}<div>${imgs}</div>`;
+        return `<strong>${escapeHtml(note.title || "Заметка")}</strong><br>${ivdBadge(note) ? ivdBadge(note) + "<br>" : ""}${escapeHtml(note.text || "")}<div>${imgs}</div>`;
       }
       function hitNoteLayer(point) {
         const layers = NOTE_LAYERS.filter((l) => map.getLayer(l));
@@ -2761,6 +3274,31 @@
           } catch (e) {}
         }, 300);
       }
+      // Режим карты «ИВД»: булавки и линии улиц окрашены по уровню, внизу легенда.
+      const ivdLegend = $("ivdLegend");
+      ivdLegend.innerHTML =
+        `<b>ИВД 2.0</b>` +
+        [
+          ...IVD_LEVELS.map((l, i) => [l, `${l.label} · ${["0–1,4", "1,5–2,9", "3,0–4,9", "5,0–10"][i]}`]),
+          [IVD_NONE, "Не оценено / меньше 6 критериев"],
+        ]
+          .map(([l, t]) => `<span><i style="background:${l.color}"></i>${escapeHtml(t)}</span>`)
+          .join("");
+      function applyIvdMode() {
+        const btn = $("btnIvdMode");
+        btn.classList.toggle("on", ivdMode);
+        btn.setAttribute("aria-pressed", String(ivdMode));
+        ivdLegend.classList.toggle("hidden", !ivdMode);
+        updateMapData();
+      }
+      $("btnIvdMode").addEventListener("click", () => {
+        ivdMode = !ivdMode;
+        try {
+          localStorage.setItem("mn-ivd-mode", ivdMode ? "1" : "0");
+        } catch (e) {}
+        applyIvdMode();
+        toast(ivdMode ? "Карта раскрашена по ИВД" : "Обычный вид карты");
+      });
       $("styleSwitch").addEventListener("click", (e) => {
         const btn = e.target.closest("button[data-style]");
         if (!btn || !map) return;
@@ -3211,6 +3749,8 @@
           criteria,
           line,
           category: CAT_BY_ID[raw.category] ? raw.category : "",
+          // ИВД хранится в заметке как ivd, а в базе — внутри criteria.ivd (схема таблицы не меняется)
+          ivd: normalizeIvd(raw.ivd || (raw.criteria && raw.criteria.ivd)),
           createdAt: Number(raw.createdAt) || Date.now(),
           updatedAt: Number(raw.updatedAt) || Date.now(),
         };
@@ -3480,7 +4020,7 @@
           lng: note.lng,
           photos,
           category: note.category || "",
-          criteria: note.criteria || {},
+          criteria: note.ivd ? { ...(note.criteria || {}), ivd: note.ivd } : note.criteria || {},
           line: note.line || null,
           created_at: new Date(note.createdAt || Date.now()).toISOString(),
           updated_at: new Date(note.updatedAt || Date.now()).toISOString(),
@@ -3910,9 +4450,27 @@
           lng: n.lng,
           photos: (n.photos || []).length,
           issues: badCount(n),
+          ...ivdProps(n),
           createdAt: n.createdAt,
           updatedAt: n.updatedAt,
         };
+      }
+      // Поля ИВД для экспорта: баллы по критериям (пусто = «—»), ИВД, уровень, флаг, зона, Кз, ИП.
+      function ivdProps(n) {
+        const v = n.ivd || {},
+          r = ivdCalc(v);
+        const out = {};
+        for (const c of IVD) out["ivd_" + c.id] = isScore(v[c.id]) ? v[c.id] : null;
+        out.ivd_n = r.n;
+        out.ivd = r.value != null ? round1(r.value) : null;
+        out.ivd_level = r.level ? r.level.label : "";
+        out.ivd_flag = r.flag ? 1 : 0;
+        out.ivd_zone = v.zone || "";
+        out.ivd_corridor = v.corridor ? 1 : 0;
+        out.ivd_kz = r.k;
+        out.ivd_ip = r.ip;
+        out.ivd_prelim = v.prelim ? 1 : 0;
+        return out;
       }
       async function doExport(ext, text, mime, desc) {
         const r = await saveFile({
@@ -3988,6 +4546,16 @@
           ["lng", "esriFieldTypeDouble"],
           ["photos", "esriFieldTypeInteger"],
           ["issues", "esriFieldTypeInteger"],
+          ...IVD.map((c) => ["ivd_" + c.id, "esriFieldTypeSmallInteger"]),
+          ["ivd_n", "esriFieldTypeSmallInteger"],
+          ["ivd", "esriFieldTypeDouble"],
+          ["ivd_level", "esriFieldTypeString"],
+          ["ivd_flag", "esriFieldTypeSmallInteger"],
+          ["ivd_zone", "esriFieldTypeString"],
+          ["ivd_corridor", "esriFieldTypeSmallInteger"],
+          ["ivd_kz", "esriFieldTypeDouble"],
+          ["ivd_ip", "esriFieldTypeDouble"],
+          ["ivd_prelim", "esriFieldTypeSmallInteger"],
           ["createdAt", "esriFieldTypeDouble"],
           ["updatedAt", "esriFieldTypeDouble"],
         ].map(([name, type]) => ({ name, type, alias: name }));
@@ -4014,7 +4582,8 @@
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
-        const col = (i) => String.fromCharCode(65 + i),
+        const col = (i) =>
+            (i >= 26 ? String.fromCharCode(64 + Math.floor(i / 26)) : "") + String.fromCharCode(65 + (i % 26)),
           dt = (t) => (t ? new Date(t).toLocaleString("ru-RU") : "");
         const cell = (v, i, r) =>
           typeof v === "number"
@@ -4033,6 +4602,14 @@
             "Замечаний",
             "Создано",
             "Изменено",
+            ...IVD.map((c) => c.code),
+            "ИВД",
+            "Уровень ИВД",
+            "Красный флаг",
+            "Зона",
+            "Кз",
+            "ИП",
+            "Предварительно",
           ],
           ...rows.map(({ u, n }, k) => [
             k + 1,
@@ -4046,6 +4623,19 @@
             badCount(n),
             dt(n.createdAt),
             dt(n.updatedAt),
+            ...IVD.map((c) => (isScore((n.ivd || {})[c.id]) ? n.ivd[c.id] : "—")),
+            ...(() => {
+              const r = ivdCalc(n.ivd);
+              return [
+                r.value != null ? round1(r.value) : "",
+                r.level ? r.level.label : "",
+                r.flag ? "да" : "нет",
+                (n.ivd && n.ivd.zone) || "",
+                r.k != null ? r.k : "",
+                r.ip != null ? r.ip : "",
+                n.ivd && n.ivd.prelim ? "да" : "",
+              ];
+            })(),
           ]),
         ];
         const X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
@@ -4303,6 +4893,8 @@
           setTimeout(() => toast("Чтобы скрыть панель браузера: Поделиться → На экран «Домой»"), 800);
         }
       }
+
+      applyIvdMode();
 
       // ===== Запуск =====
       try {
